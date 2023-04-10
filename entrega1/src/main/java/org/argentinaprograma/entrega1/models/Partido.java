@@ -54,18 +54,19 @@ public class Partido {
 	//Metodo para indicar si gano o perdió o empató
 	public ResultadoEnum resultado(Equipo equipoParaConsultarResultado) {
 		
-		ResultadoEnum resultado = new ResultadoEnum("e");
+		ResultadoEnum resultado = ResultadoEnum.EMPATE;
+		
 		if(equipoParaConsultarResultado.esEl(equipo1)) {
 			if(this.golesEquipo1 > this.golesEquipo2) {
-				resultado = new ResultadoEnum("g");
+				resultado = ResultadoEnum.GANADOR;
 			}else if(this.golesEquipo1 < this.golesEquipo2) {
-				resultado = new ResultadoEnum("p");
+				resultado = ResultadoEnum.PERDEDOR;
 			}
 		}else{
 			if(this.golesEquipo2 > this.golesEquipo1) {
-				resultado = new ResultadoEnum("g");
+				resultado = ResultadoEnum.GANADOR;
 			}else if(this.golesEquipo2 < this.golesEquipo1) {
-				resultado = new ResultadoEnum("p");
+				resultado = ResultadoEnum.PERDEDOR;
 			}
 		}
 		return resultado;	

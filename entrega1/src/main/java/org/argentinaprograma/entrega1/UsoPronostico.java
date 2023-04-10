@@ -3,6 +3,7 @@ package org.argentinaprograma.entrega1;
 import org.argentinaprograma.entrega1.models.Equipo;
 import org.argentinaprograma.entrega1.models.Partido;
 import org.argentinaprograma.entrega1.models.ResultadoEnum;
+import org.argentinaprograma.entrega1.models.ResultadoEnum;
 import org.argentinaprograma.entrega1.models.Pronostico;
 
 public class UsoPronostico {
@@ -14,13 +15,16 @@ public class UsoPronostico {
 		
 		//Creo el objeto "partidoInicial" de la Clase Partido y e inicalizo con
 		//EquipoA, golesquipoA, equipoB, golesquipoA)
-		Partido partidoInicial = new Partido(equipoA, 1, equipoB, 0);
+		Partido partidoInicial = new Partido(equipoA, 1, equipoB, 1);
 		
 		//De aca en adelante no entiendo bien como funciona
-		Equipo equipoConsulta = new Equipo("Paraguay");
-		ResultadoEnum resultado = new ResultadoEnum("g");
+		//------------------------------------------------------------------
+		Equipo equipoConsulta = new Equipo("Paraguay"); //Equipo de prueba
+		ResultadoEnum resultado = ResultadoEnum.EMPATE; //resultado esperado de prueba
 		
+		//Se creo un Pronostico con los datos de prueba de arriba.
 		Pronostico pronostico = new Pronostico(partidoInicial, equipoConsulta, resultado);
+		//------------------------------------------------------------------		
 		
 		System.out.println(pronostico.puntos());
 	}

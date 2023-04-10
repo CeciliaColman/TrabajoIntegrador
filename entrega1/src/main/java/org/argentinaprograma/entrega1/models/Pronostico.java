@@ -12,7 +12,7 @@ public class Pronostico {
 	}
 	
 	public int puntos() {
-		if(partido.resultado(equipo).getResultado().equals(resultado.getResultado())) {
+		if(partido.resultado(equipo).equals(resultado)) {
 			return 1;
 		}
 		return 0;
