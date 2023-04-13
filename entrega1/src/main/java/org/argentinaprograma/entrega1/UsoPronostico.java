@@ -17,12 +17,16 @@ public class UsoPronostico {
 		//Creo el objeto "equipoA" y "equipoB"  de la Clase Equipo e inicalizo
 		String archivoResultados = "src/main/resources/resultados.csv";
 		Path pathResultados = Paths.get(archivoResultados);
+		String archivoPronostico = "src/main/resources/pronostico.csv";
+		Path pathPronostico = Paths.get(archivoPronostico);
+		
 		Ronda ronda = new Ronda(1);
+		Pronostico[] pronosticos = new Pronostico[2];
+		Equipo equipoA = null;
+		Equipo equipoB = null;
 		
 		try {
 			String[] separados;
-			Equipo equipoA;
-			Equipo equipoB;
 			Partido[] partidos = new Partido[2];
 			
 			int numeroPartido = 0;
@@ -43,6 +47,41 @@ public class UsoPronostico {
 			e.printStackTrace();
 		}
 		
+		try {
+			String[] separados;
+
+			int numeroPronostico = 0;
+			boolean ganaEquipoA = false;
+			boolean ganaEquipoB = false;
+			boolean empate = false;
+			Equipo equipo;
+			for(String linea : Files.readAllLines(pathPronostico)) {
+				separados = linea.split(",");
+				System.out.print("Pronistico partido " + (numeroPronostico + 1) + "---> " );;
+				if(separados[0].equals("x")) {
+					System.out.println("Gana:" + ronda.partidosRonda(1)[numeroPronostico].getEquipo1().getNombre());
+					ganaEquipoA = true;
+					equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
+					pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.GANADOR);
+				}else if(separados[1].equals("x")) {
+					System.out.println("Empate");
+					empate = true;
+					equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
+					pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.EMPATE);
+				}else {
+					System.out.println("Gana:" + ronda.partidosRonda(1)[numeroPronostico].getEquipo2().getNombre());
+					ganaEquipoB = true;
+					equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo2();
+					pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.GANADOR);
+				}
+				numeroPronostico++;
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//Equipo equipoA = new Equipo("Argentina");
 		//Equipo equipoB = new Equipo("Paraguay");
 		
@@ -52,20 +91,28 @@ public class UsoPronostico {
 		
 		//De aca en adelante no entiendo bien como funciona
 		//------------------------------------------------------------------
-		Equipo equipoConsulta = new Equipo("Arabia Saudita"); //Equipo de prueba
-		ResultadoEnum resultado = ResultadoEnum.GANADOR; //resultado esperado de prueba
+		//Equipo equipoConsulta = new Equipo("Arabia Saudita"); //Equipo de prueba
+		//ResultadoEnum resultado = ResultadoEnum.GANADOR; //resultado esperado de prueba
 		
 		//Se creo un Pronostico con los datos de prueba de arriba.
-		Partido partidoConsultado = ronda.partidosRonda(1)[0];
-		Pronostico pronostico = new Pronostico(partidoConsultado, equipoConsulta, resultado);
+		//Partido partidoConsultado = ronda.partidosRonda(1)[0];
+		//Pronostico pronostico = new Pronostico(partidoConsultado, equipoConsulta, resultado);
 		//------------------------------------------------------------------		
 		
-		System.out.println(ronda.partidosRonda(1)[0].getEquipo1().getNombre());
+		/*System.out.println(ronda.partidosRonda(1)[0].getEquipo1().getNombre());
 		System.out.println(ronda.partidosRonda(1)[0].getGolesEquipo1());
 		System.out.println(ronda.partidosRonda(1)[0].getEquipo2().getNombre());
 		System.out.println(ronda.partidosRonda(1)[0].getGolesEquipo2());
 		System.out.println("Pronostico: " + resultado);
-		System.out.println("Puntos: " + pronostico.puntos());
+		System.out.println("Puntos: " + pronostico.puntos());*/
+		int puntosTotales = 0;
+		int nroPartido = 1;
+		for(Pronostico pronostico : pronosticos) {
+			puntosTotales += pronostico.puntos();
+			System.out.println(pronostico.puntos() + " punto por partido " + nroPartido);
+			nroPartido++;
+		}
+		System.out.println("TOTAL PUNTOS --> " + puntosTotales);
 	}
 
 }
