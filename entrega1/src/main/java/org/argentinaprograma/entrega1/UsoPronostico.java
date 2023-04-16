@@ -15,10 +15,16 @@ public class UsoPronostico {
 
 	public static void main(String[] args) {
 		//Creo el objeto "equipoA" y "equipoB"  de la Clase Equipo e inicalizo
-		String archivoResultados = "src/main/resources/resultados.csv";
-		Path pathResultados = Paths.get(archivoResultados);
-		String archivoPronostico = "src/main/resources/pronostico.csv";
-		Path pathPronostico = Paths.get(archivoPronostico);
+		//String archivoResultados = "src/main/resources/resultados.csv";
+		//Path pathResultados = Paths.get(archivoResultados);
+		if(args.length != 2) {
+			System.out.println("Numero incorrecto de parametros.");
+			System.exit(88);
+		}
+		Path pathResultados = Paths.get(args[0]);
+		//String archivoPronostico = "src/main/resources/pronostico.csv";
+		//Path pathPronostico = Paths.get(archivoPronostico);
+		Path pathPronostico = Paths.get(args[1]);
 		
 		Ronda ronda = new Ronda(1);
 		Pronostico[] pronosticos = new Pronostico[2];
@@ -49,31 +55,34 @@ public class UsoPronostico {
 		
 		try {
 			String[] separados;
-
 			int numeroPronostico = 0;
-			boolean ganaEquipoA = false;
-			boolean ganaEquipoB = false;
-			boolean empate = false;
+			ResultadoEnum resultadoParaEquipoA;
 			Equipo equipo;
+			
 			for(String linea : Files.readAllLines(pathPronostico)) {
 				separados = linea.split(",");
 				System.out.print("Pronistico partido " + (numeroPronostico + 1) + "---> " );;
 				if(separados[0].equals("x")) {
 					System.out.println("Gana:" + ronda.partidosRonda(1)[numeroPronostico].getEquipo1().getNombre());
-					ganaEquipoA = true;
-					equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
-					pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.GANADOR);
+					resultadoParaEquipoA = ResultadoEnum.GANADOR;
+					//ganaEquipoA = true;
+					//equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
+					//pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.GANADOR);
 				}else if(separados[1].equals("x")) {
 					System.out.println("Empate");
-					empate = true;
-					equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
-					pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.EMPATE);
+					resultadoParaEquipoA = ResultadoEnum.EMPATE;
+					//empate = true;
+					//equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
+					//pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.EMPATE);
 				}else {
+					resultadoParaEquipoA = ResultadoEnum.PERDEDOR;
 					System.out.println("Gana:" + ronda.partidosRonda(1)[numeroPronostico].getEquipo2().getNombre());
-					ganaEquipoB = true;
-					equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo2();
-					pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.GANADOR);
+					//ganaEquipoB = true;
+					//equipo = ronda.partidosRonda(1)[numeroPronostico].getEquipo2();
+					//pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipo, ResultadoEnum.GANADOR);
 				}
+				equipoA = ronda.partidosRonda(1)[numeroPronostico].getEquipo1();
+				pronosticos[numeroPronostico] = new Pronostico(ronda.partidosRonda(1)[numeroPronostico], equipoA, resultadoParaEquipoA);
 				numeroPronostico++;
 			}
 			
