@@ -1,34 +1,18 @@
-package org.argentinaprograma.entrega1;
+package org.argentinaprograma.entrega1.models;
 
-//import java.io.IOException;
-//import java.nio.file.Files;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import org.argentinaprograma.entrega1.models.Equipo;
-//import org.argentinaprograma.entrega1.models.Partido;
-//import org.argentinaprograma.entrega1.models.ResultadoEnum;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.argentinaprograma.entrega1.models.ImportadorDatos;
-import org.argentinaprograma.entrega1.models.Ronda;
-import org.argentinaprograma.entrega1.models.Pronostico;
+public class ImportadorDatos {
 
-public class UsoPronostico {
+	public static Ronda crearRonda(String rutaDelArchivoDeResultados) {
 
-	public static void main(String[] args) {
-
-		if(args.length != 2) {
-			System.out.println("Numero incorrecto de parametros.");
-			System.exit(88);
-		}
-
-		//Path pathPronostico = Paths.get(args[1]);
+		Ronda ronda = new Ronda(1);
 		
-		Ronda ronda = ImportadorDatos.crearRonda(args[0]);
-		Pronostico[] pronosticos = ImportadorDatos.crearPronosticos(args[1], ronda);
-		
-		//Pronostico[] pronosticos = new Pronostico[2];
-		//Equipo equipoA = null;
-		/*try {
+		Path pathResultados = Paths.get(rutaDelArchivoDeResultados);
+		try {
 			String[] separados;
 			Partido[] partidos = new Partido[2];
 			
@@ -36,10 +20,10 @@ public class UsoPronostico {
 			int golesEquipoA, golesEquipoB;
 			for(String linea : Files.readAllLines(pathResultados)) {
 				separados = linea.split(",");
-				equipoA = new Equipo(separados[0]);
+				Equipo equipoA = new Equipo(separados[0]);
 				golesEquipoA = Integer.parseInt(separados[1]);
 				golesEquipoB = Integer.parseInt(separados[2]);
-				equipoB = new Equipo(separados[3]);
+				Equipo equipoB = new Equipo(separados[3]);
 				partidos[numeroPartido] = new Partido(equipoA,
 						golesEquipoA, equipoB, golesEquipoB);
 				numeroPartido++;
@@ -48,11 +32,18 @@ public class UsoPronostico {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return ronda;
+	}
+
+	public static Pronostico[] crearPronosticos(String rutaDelArchivoDePronosticos, Ronda ronda) {
+		Path pathPronostico = Paths.get(rutaDelArchivoDePronosticos);
+		Pronostico[] pronosticos = new Pronostico[2];
+		
 		try {
 			String[] separados;
 			int numeroPronostico = 0;
 			ResultadoEnum resultadoParaEquipoA;
-			Equipo equipo;
+			Equipo equipoA;
 			
 			for(String linea : Files.readAllLines(pathPronostico)) {
 				separados = linea.split(",");
@@ -74,16 +65,9 @@ public class UsoPronostico {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
-
-		int puntosTotales = 0;
-		int nroPartido = 1;
-		for(Pronostico pronostico : pronosticos) {
-			puntosTotales += pronostico.puntos();
-			System.out.println(pronostico.puntos() + " punto por partido " + nroPartido);
-			nroPartido++;
 		}
-		System.out.println("TOTAL PUNTOS --> " + puntosTotales);
+		
+		return pronosticos;
 	}
 
 }
