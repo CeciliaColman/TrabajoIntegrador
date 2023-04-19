@@ -19,7 +19,9 @@ public class Ronda {
 		return this.partidos;
 	}
 
-	public Partido partido(int id_partido) {
-		return partidos.get(id_partido - 1);
+	public Partido partido(int id_partido_masUno) {
+		//Aqui resto uno, porque el partido por ejemplo con id=1
+		//esta en la ubicacion [0] de lista de partidos.
+		return partidos.get(id_partido_masUno - 1);
 	}
 }

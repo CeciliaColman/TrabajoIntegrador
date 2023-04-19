@@ -1,13 +1,14 @@
 package org.argentinaprograma.entrega2.models;
 
+import com.opencsv.bean.CsvBindAndJoinByPosition;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Setter;
 
-@Data
-@AllArgsConstructor
+//@Data
+//@AllArgsConstructor
 public class Partido {
 	
 	@CsvBindByPosition(position = 0)
@@ -16,18 +17,24 @@ public class Partido {
     @CsvBindByPosition(position = 1)
     private int ronda;
     @CsvBindByPosition(position = 2)
-    private Equipo equipo1;
+    private String nombreEquipo1;
     @CsvBindByPosition(position = 3)
     private int golesEquipo1;
     @CsvBindByPosition(position = 4)
     private int golesEquipo2;
     @CsvBindByPosition(position = 5)
-    private Equipo equipo2;
+    private String nombreEquipo2;
     
+	private Equipo equipo1;
+	private Equipo equipo2;
 	
 	//Metodo para indicar si gano o perdió o empató
 	public ResultadoEnum resultado(Equipo equipoParaConsultarResultado) {
 		
+		/*if(equipo1 == null && equipo2 == null) {
+			equipo1 = new Equipo(nombreEquipo1);
+			equipo2 = new Equipo(nombreEquipo2);
+		}*/
 		ResultadoEnum resultado = ResultadoEnum.EMPATE;
 		
 		if(equipoParaConsultarResultado.esEl(equipo1)) {
@@ -104,6 +111,11 @@ public class Partido {
 
 	public void setEquipo2(Equipo equipo2) {
 		this.equipo2 = equipo2;
+	}
+
+	public void inicializarEquipos() {
+		equipo1 = new Equipo(nombreEquipo1);
+		equipo2 = new Equipo(nombreEquipo2);
 	}
 	
 	

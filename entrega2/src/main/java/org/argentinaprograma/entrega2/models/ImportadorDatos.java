@@ -32,6 +32,7 @@ public class ImportadorDatos {
         	e.printStackTrace();
         }
         for(Partido partido : lineasArchivoResultados) {
+        	partido.inicializarEquipos();
         	ronda.agregarPartidos(partido);
         }
 		return ronda;
@@ -44,26 +45,26 @@ public class ImportadorDatos {
 		
 		try {
 			String[] separados;
-			int numeroPronostico = 0;
+			int numeroPartido = 1;
 			ResultadoEnum resultadoParaEquipoA;
 			Equipo equipoA;
 			
 			for(String linea : Files.readAllLines(pathPronostico)) {
 				separados = linea.split(",");
-				System.out.print("Pronistico partido " + (numeroPronostico + 1) + "---> " );;
-				if(separados[0].equals("x")) {
-					System.out.println("Gana:" + ronda.partido(numeroPronostico).getEquipo1().getNombre());
+				System.out.print("Pronistico partido " + numeroPartido + "---> " );
+				if(separados[1].equals("x")) {
+					System.out.println("Gana:" + ronda.partido(numeroPartido).getEquipo1().getNombre());
 					resultadoParaEquipoA = ResultadoEnum.GANADOR;
-				}else if(separados[1].equals("x")) {
+				}else if(separados[2].equals("x")) {
 					System.out.println("Empate");
 					resultadoParaEquipoA = ResultadoEnum.EMPATE;
 				}else {
 					resultadoParaEquipoA = ResultadoEnum.PERDEDOR;
-					System.out.println("Gana:" + ronda.partido(numeroPronostico).getEquipo2().getNombre());
+					System.out.println("Gana:" + ronda.partido(numeroPartido).getEquipo2().getNombre());
 				}
-				equipoA = ronda.partido(numeroPronostico).getEquipo1();
-				pronosticos.add(new Pronostico(ronda, (numeroPronostico + 1), equipoA, resultadoParaEquipoA));
-				numeroPronostico++;
+				equipoA = ronda.partido(numeroPartido).getEquipo1();
+				pronosticos.add(new Pronostico(ronda, numeroPartido, equipoA, resultadoParaEquipoA));
+				numeroPartido++;
 			}
 			
 		} catch (IOException e) {
