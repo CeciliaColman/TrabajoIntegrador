@@ -40,7 +40,7 @@ public class ImportadorDatos {
 	public static List<Pronostico> crearPronosticos(String rutaDelArchivoDePronosticos, Ronda ronda) {
 		
 		Path pathPronostico = Paths.get(rutaDelArchivoDePronosticos);
-		List<Pronostico> pronosticos = new ArrayList<>();
+		List<Pronostico> pronosticos = new ArrayList<Pronostico>();
 		
 		try {
 			String[] separados;

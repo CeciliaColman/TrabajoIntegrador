@@ -8,7 +8,7 @@ public class Ronda {
 	List<Partido> partidos;
 	
 	public Ronda(){
-		this.partidos = new ArrayList<>();
+		this.partidos = new ArrayList<Partido>();
 	}
 	
 	public void agregarPartidos(Partido partido) {
