@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argentinaprograma.entrega2.exceptions.IdPartidoNoEncontradoException;
+
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class ImportadorDatos {
@@ -38,37 +40,53 @@ public class ImportadorDatos {
 		return ronda;
 	}
 
-	public static List<Pronostico> crearPronosticos(String rutaDelArchivoDePronosticos, Ronda ronda) {
+	public static List<Pronostico> crearPronosticos(String rutaDelArchivoDePronosticos, Ronda ronda){
 		
 		Path pathPronostico = Paths.get(rutaDelArchivoDePronosticos);
 		List<Pronostico> pronosticos = new ArrayList<Pronostico>();
 		
 		try {
 			String[] separados;
-			int numeroPartido = 1;
+			//int numeroPartido = 1;
+			int idPartido;
 			ResultadoEnum resultadoParaEquipoA;
-			Equipo equipoA;
+			Equipo equipoA = null;
 			
 			for(String linea : Files.readAllLines(pathPronostico)) {
 				separados = linea.split(",");
-				System.out.print("Pronistico partido " + numeroPartido + "---> " );
+				idPartido = Integer.parseInt(separados[0]);
+				System.out.print("Pronistico partido " + idPartido + "---> " );
 				if(separados[1].equals("x")) {
-					System.out.println("Gana:" + ronda.partido(numeroPartido).getEquipo1().getNombre());
+					try {
+						System.out.println("Gana:" + ronda.partido(idPartido).getEquipo1().getNombre());
+					} catch (IdPartidoNoEncontradoException e) {
+						System.out.println("ID ERROR!");
+					}
 					resultadoParaEquipoA = ResultadoEnum.GANADOR;
 				}else if(separados[2].equals("x")) {
 					System.out.println("Empate");
 					resultadoParaEquipoA = ResultadoEnum.EMPATE;
 				}else {
 					resultadoParaEquipoA = ResultadoEnum.PERDEDOR;
-					System.out.println("Gana:" + ronda.partido(numeroPartido).getEquipo2().getNombre());
+					try {
+						System.out.println("Gana:" + ronda.partido(idPartido).getEquipo2().getNombre());
+					} catch (IdPartidoNoEncontradoException e) {
+						System.out.println("ID ERROR!");
+					}
 				}
-				equipoA = ronda.partido(numeroPartido).getEquipo1();
-				pronosticos.add(new Pronostico(ronda, numeroPartido, equipoA, resultadoParaEquipoA));
-				numeroPartido++;
+				
+				try {
+					equipoA = ronda.partido(idPartido).getEquipo1();
+					pronosticos.add(new Pronostico(ronda, idPartido, equipoA, resultadoParaEquipoA));
+				} catch (IdPartidoNoEncontradoException e) {
+					System.out.println("NO SE AGREDA PRONOSTICO PARA ID " + idPartido);
+				}
+				
+				//pronosticos.add(new Pronostico(ronda, idPartido, equipoA, resultadoParaEquipoA));
 			}
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error IOException :" + e.getMessage());
 		}
 		
 		return pronosticos;

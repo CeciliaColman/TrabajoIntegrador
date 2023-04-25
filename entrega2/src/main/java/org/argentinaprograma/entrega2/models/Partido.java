@@ -31,10 +31,6 @@ public class Partido {
 	//Metodo para indicar si gano o perdió o empató
 	public ResultadoEnum resultado(Equipo equipoParaConsultarResultado) {
 		
-		/*if(equipo1 == null && equipo2 == null) {
-			equipo1 = new Equipo(nombreEquipo1);
-			equipo2 = new Equipo(nombreEquipo2);
-		}*/
 		ResultadoEnum resultado = ResultadoEnum.EMPATE;
 		
 		if(equipoParaConsultarResultado.esEl(equipo1)) {
@@ -116,6 +112,11 @@ public class Partido {
 	public void inicializarEquipos() {
 		equipo1 = new Equipo(nombreEquipo1);
 		equipo2 = new Equipo(nombreEquipo2);
+	}
+
+	public boolean esId(int id_partido_solicitado) {
+		
+		return (this.id == id_partido_solicitado);
 	}
 	
 	

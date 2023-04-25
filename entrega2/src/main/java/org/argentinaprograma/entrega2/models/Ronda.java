@@ -1,6 +1,9 @@
 package org.argentinaprograma.entrega2.models;
 
 import java.util.List;
+
+import org.argentinaprograma.entrega2.exceptions.IdPartidoNoEncontradoException;
+
 import java.util.ArrayList;
 
 public class Ronda {
@@ -19,9 +22,18 @@ public class Ronda {
 		return this.partidos;
 	}
 
-	public Partido partido(int id_partido_masUno) {
-		//Aqui resto uno, porque el partido por ejemplo con id=1
-		//esta en la ubicacion [0] de lista de partidos.
-		return partidos.get(id_partido_masUno - 1);
+	public Partido partido(int id_partido) 
+			throws IdPartidoNoEncontradoException {
+		
+		Partido partido = null;
+		for (Partido partidoJugado : partidos) {
+			if(partidoJugado.esId(id_partido)) {
+				partido = partidoJugado;
+			}
+		}
+		if(partido == null) {
+			throw new IdPartidoNoEncontradoException();
+		}
+		return partido;
 	}
 }

@@ -1,10 +1,9 @@
 package org.argentinaprograma.entrega2;
 
 import java.util.List;
-
-import org.argentinaprograma.entrega2.models.ImportadorDatos;
-import org.argentinaprograma.entrega2.models.Pronostico;
 import org.argentinaprograma.entrega2.models.Ronda;
+import org.argentinaprograma.entrega2.models.Pronostico;
+import org.argentinaprograma.entrega2.models.ImportadorDatos;
 
 public class UsoPronostico {
 
@@ -13,7 +12,10 @@ public class UsoPronostico {
 		chequearCantidadArgumentos(args);
 
 		Ronda ronda = ImportadorDatos.crearRonda(args[0]);
-		List<Pronostico> pronosticos = ImportadorDatos.crearPronosticos(args[1], ronda);
+		List<Pronostico> pronosticos = null;
+		
+		pronosticos = ImportadorDatos.crearPronosticos(args[1], ronda);
+		
 		
 		System.out.println("TOTAL PUNTOS --> " + calcularPuntos(pronosticos));
 		
@@ -28,11 +30,10 @@ public class UsoPronostico {
 
 	private static int calcularPuntos(List<Pronostico> pronosticos) {
 		int puntosTotales = 0;
-		int nroPartido = 1;
+		//int nroPartido = 1;
 		for(Pronostico pronostico : pronosticos) {
 			puntosTotales += pronostico.puntos();
-			System.out.println(pronostico.puntos() + " punto por partido " + nroPartido);
-			nroPartido++;
+			System.out.println(pronostico.puntos() + " punto por partido id: " + pronostico.idDelPartido());
 		}
 		return puntosTotales;
 	}
