@@ -9,8 +9,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.argentinaprograma.entrega2.models.Equipo;
-import org.argentinaprograma.entrega2.models.Partido;
+//import org.argentinaprograma.entrega2.models.Equipo;
+//import org.argentinaprograma.entrega2.models.Partido;
 import org.argentinaprograma.entrega2.exceptions.IdPartidoNoEncontradoException;
 
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -42,37 +42,16 @@ public class ImportadorDatos {
         	partido.inicializarEquipos();
         	ronda.agregarPartidos(partido);
         }
-		//eliminar(rutaArchivoConCamposCorrectos);
         return ronda;
-	}
-
-	private static void eliminar(String rutaArchivoConCamposCorrectos) {
-		try {
-			Files.delete(Paths.get(rutaArchivoConCamposCorrectos));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
 	private static String verificarCamposArchivoResultados(String rutaArchivoDeResultados) {
 		
 		Path pathArchivoOriginal = Paths.get(rutaArchivoDeResultados);
-		System.out.println(pathArchivoOriginal);
-		System.out.println(pathArchivoOriginal.toAbsolutePath());
-		System.out.println(Files.exists(pathArchivoOriginal));
-		try {
-			System.out.println(Files.readAllLines(pathArchivoOriginal));
-		} catch (IOException e) {
-			System.out.println("ERROR AL PRIMER READALLLINES");
-			e.printStackTrace();
-		}
+
 		String rutaArchivoResultadosCamposCorrectos = "TEMP-resultadosCamposCorrectos.csv";
 		Path pathArchivoCamposCorrectos = Paths.get(rutaArchivoResultadosCamposCorrectos);
 		
-		System.out.println(pathArchivoCamposCorrectos);
-		System.out.println(pathArchivoCamposCorrectos.toAbsolutePath());
 		try {
 			Files.deleteIfExists(pathArchivoCamposCorrectos);
 			Files.createFile(pathArchivoCamposCorrectos);
@@ -83,30 +62,40 @@ public class ImportadorDatos {
 		
 		try {
 			String[] separados;
-			int golesEqA, golesEqB; 
-			System.out.println("Por readalllines");
-			System.out.println(Files.readAllLines(pathArchivoOriginal));
+			String golesEqA, golesEqB;
+			String regExNumeros = "[0-9]+";
+			int nroLinea = 1;
 			for(String linea : Files.readAllLines(pathArchivoOriginal)) {
-				System.out.println("Dentro de readalllines");
+				//Agrego "enter" al final de cada linea leida
+				if(!(linea.endsWith("\n"))) {
+					linea = linea + "\n";
+				}
+				
 				separados = linea.split(",");
-				if(separados.length == 6) {
-					//Chequeo goles
-					try {
-						golesEqA = Integer.parseInt(separados[3]);
-						golesEqB = Integer.parseInt(separados[4]);
-						if((golesEqA >= 0) && (golesEqB >= 0)) {
+				if(nroLinea == 1) {
+					//Agrego encabezado sin verificar
+					Files.write(pathArchivoCamposCorrectos, linea.getBytes(), StandardOpenOption.APPEND);
+				}else{
+					if(separados.length == 6) {
+						//Chequeo goles
+						golesEqA = separados[3];
+						golesEqB = separados[4];
+						if((golesEqA.matches(regExNumeros)) && (golesEqB.matches(regExNumeros))) {
 							//agrego a archivo chequeado
 							Files.write(pathArchivoCamposCorrectos, linea.getBytes(), StandardOpenOption.APPEND);
+						}else {
+							System.out.println("Error \"goles\" en linea: " + nroLinea);
 						}
-					}catch(NumberFormatException e) {
-						System.out.println("Error en linea.");
-						//No agrego linea
+					}else {
+						System.out.println("Error cantidad de campos en linea: " + nroLinea);
 					}
 				}
+				nroLinea++;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return rutaArchivoResultadosCamposCorrectos;
 	}
 
@@ -130,29 +119,25 @@ public class ImportadorDatos {
         	e.printStackTrace();
         }
 		
-		return pronosticosSinErroresDeIndice(lineasArchivoPronostico, ronda);
+		return pronosticosSinErroresEnId_partido(lineasArchivoPronostico, ronda);
 	}
 
-	private static List<Pronostico> pronosticosSinErroresDeIndice(List<Pronostico> lineasArchivoPronostico, Ronda ronda) {
+	private static List<Pronostico> pronosticosSinErroresEnId_partido(List<Pronostico> lineasArchivoPronostico, Ronda ronda) {
 		
-		List<Integer> indicesConError = new ArrayList<>();
-        Integer indiceActual = 0;
+		List<Pronostico> pronosticosConErrores = new ArrayList<Pronostico>();
         
         for(Pronostico pronostico : lineasArchivoPronostico) {
         	try {
 				pronostico.inicializarCon(ronda);
 				//pronostico.mostrarPronostico();
 			} catch (IdPartidoNoEncontradoException e) {
-				indicesConError.add(indiceActual);
-				System.out.println("ID<" + pronostico.idDelPartido() + ">ERROR! | No se cargara pronostico.");
+				pronosticosConErrores.add(pronostico);
+				System.out.println("No se encontro partido con ID<" + pronostico.idDelPartido() + "> | No se cargara pronostico.");
 			}
-        	indiceActual++;
         }	
-
-		for(int indiceConError : indicesConError) {
-			lineasArchivoPronostico.remove(indiceConError);
-		}
-		
+        if(!pronosticosConErrores.isEmpty()) {
+        	lineasArchivoPronostico.removeAll(pronosticosConErrores);
+        }
 		return lineasArchivoPronostico;
 	}
 
