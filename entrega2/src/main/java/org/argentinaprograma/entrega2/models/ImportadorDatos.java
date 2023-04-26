@@ -42,54 +42,48 @@ public class ImportadorDatos {
 
 	public static List<Pronostico> crearPronosticos(String rutaDelArchivoDePronosticos, Ronda ronda){
 		
-		Path pathPronostico = Paths.get(rutaDelArchivoDePronosticos);
-		List<Pronostico> pronosticos = new ArrayList<Pronostico>();
+		List<Pronostico> lineasArchivoPronostico = new ArrayList<Pronostico>();
 		
-		try {
-			String[] separados;
-			//int numeroPartido = 1;
-			int idPartido;
-			ResultadoEnum resultadoParaEquipoA;
-			Equipo equipoA = null;
-			
-			for(String linea : Files.readAllLines(pathPronostico)) {
-				separados = linea.split(",");
-				idPartido = Integer.parseInt(separados[0]);
-				System.out.print("Pronistico partido " + idPartido + "---> " );
-				if(separados[1].equals("x")) {
-					try {
-						System.out.println("Gana:" + ronda.partido(idPartido).getEquipo1().getNombre());
-					} catch (IdPartidoNoEncontradoException e) {
-						System.out.println("ID ERROR!");
-					}
-					resultadoParaEquipoA = ResultadoEnum.GANADOR;
-				}else if(separados[2].equals("x")) {
-					System.out.println("Empate");
-					resultadoParaEquipoA = ResultadoEnum.EMPATE;
-				}else {
-					resultadoParaEquipoA = ResultadoEnum.PERDEDOR;
-					try {
-						System.out.println("Gana:" + ronda.partido(idPartido).getEquipo2().getNombre());
-					} catch (IdPartidoNoEncontradoException e) {
-						System.out.println("ID ERROR!");
-					}
-				}
-				
-				try {
-					equipoA = ronda.partido(idPartido).getEquipo1();
-					pronosticos.add(new Pronostico(ronda, idPartido, equipoA, resultadoParaEquipoA));
-				} catch (IdPartidoNoEncontradoException e) {
-					System.out.println("NO SE AGREDA PRONOSTICO PARA ID " + idPartido);
-				}
-				
-				//pronosticos.add(new Pronostico(ronda, idPartido, equipoA, resultadoParaEquipoA));
+        try {
+            // En esta primera línea definimos el archivos que va a ingresar
+        	lineasArchivoPronostico = new CsvToBeanBuilder(new FileReader(rutaDelArchivoDePronosticos))
+                    // con esta configuración podemos skipear la primera línea de nuestro archivo CSV
+                    .withSkipLines(1)
+                    // con esta configuración podemos elegir cual es el caracter que vamos a usar para delimitar
+                    .withSeparator(',')
+                    // Es necesario definir el tipo de dato que va a generar el objeto que estamos queriendo parsear a partir del CSV
+                    .withType(Pronostico.class)
+                    .build()
+                    .parse();
+
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
+		
+		return pronosticosSinErroresDeIndice(lineasArchivoPronostico, ronda);
+	}
+
+	private static List<Pronostico> pronosticosSinErroresDeIndice(List<Pronostico> lineasArchivoPronostico, Ronda ronda) {
+		
+		List<Integer> indicesConError = new ArrayList<>();
+        Integer indiceActual = 0;
+        
+        for(Pronostico pronostico : lineasArchivoPronostico) {
+        	try {
+				pronostico.inicializarCon(ronda);
+				//pronostico.mostrarPronostico();
+			} catch (IdPartidoNoEncontradoException e) {
+				indicesConError.add(indiceActual);
+				System.out.println("ID<" + pronostico.idDelPartido() + ">ERROR! | No se cargara pronostico.");
 			}
-			
-		} catch (IOException e) {
-			System.out.println("Error IOException :" + e.getMessage());
+        	indiceActual++;
+        }	
+
+		for(int indiceConError : indicesConError) {
+			lineasArchivoPronostico.remove(indiceConError);
 		}
 		
-		return pronosticos;
+		return lineasArchivoPronostico;
 	}
 
 }

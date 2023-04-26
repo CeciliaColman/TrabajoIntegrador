@@ -30,10 +30,11 @@ public class UsoPronostico {
 
 	private static int calcularPuntos(List<Pronostico> pronosticos) {
 		int puntosTotales = 0;
-		//int nroPartido = 1;
+		int puntosPorPronostico = 0;
 		for(Pronostico pronostico : pronosticos) {
-			puntosTotales += pronostico.puntos();
-			System.out.println(pronostico.puntos() + " punto por partido id: " + pronostico.idDelPartido());
+			puntosPorPronostico = pronostico.puntos();
+			puntosTotales += puntosPorPronostico;
+			System.out.println(puntosPorPronostico + " punto por partido id: " + pronostico.idDelPartido());
 		}
 		return puntosTotales;
 	}

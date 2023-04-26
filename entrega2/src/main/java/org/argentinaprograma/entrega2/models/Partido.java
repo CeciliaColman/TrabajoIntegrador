@@ -1,18 +1,10 @@
 package org.argentinaprograma.entrega2.models;
 
-import com.opencsv.bean.CsvBindAndJoinByPosition;
 import com.opencsv.bean.CsvBindByPosition;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Setter;
 
-//@Data
-//@AllArgsConstructor
 public class Partido {
 	
 	@CsvBindByPosition(position = 0)
-	@Setter(AccessLevel.NONE)
 	private int id;
     @CsvBindByPosition(position = 1)
     private int ronda;
@@ -99,11 +91,9 @@ public class Partido {
 		this.golesEquipo2 = golesEquipo2;
 	}
 
-
 	public Equipo getEquipo2() {
 		return equipo2;
 	}
-
 
 	public void setEquipo2(Equipo equipo2) {
 		this.equipo2 = equipo2;
@@ -118,18 +108,5 @@ public class Partido {
 		
 		return (this.id == id_partido_solicitado);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

@@ -7,7 +7,6 @@ import org.argentinaprograma.entrega2.exceptions.IdPartidoNoEncontradoException;
 import java.util.ArrayList;
 
 public class Ronda {
-	//private int rondaNumero;
 	List<Partido> partidos;
 	
 	public Ronda(){
