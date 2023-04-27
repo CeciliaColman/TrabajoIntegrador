@@ -6,12 +6,14 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class Pronostico {
 	@CsvBindByPosition(position = 0)
-	private int id_partido;
+	private String participante;
 	@CsvBindByPosition(position = 1)
-	private String ganaEquipoA;
+	private int id_partido;
 	@CsvBindByPosition(position = 2)
-	private String empate;
+	private String ganaEquipoA;
 	@CsvBindByPosition(position = 3)
+	private String empate;
+	@CsvBindByPosition(position = 4)
 	private String ganaEquipoB;
 	
 	private Equipo equipoA;
@@ -111,6 +113,14 @@ public class Pronostico {
 
 	public void setRonda(Ronda ronda) {
 		this.ronda = ronda;
+	}
+
+	public String getParticipante() {
+		return participante;
+	}
+
+	public void setParticipante(String participante) {
+		this.participante = participante;
 	}
 
 }

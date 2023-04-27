@@ -12,12 +12,9 @@ public class UsoPronostico {
 		chequearCantidadArgumentos(args);
 
 		Ronda ronda = ImportadorDatos.crearRonda(args[0]);
-		List<Pronostico> pronosticos = null;
+		List<Pronostico> pronosticos = ImportadorDatos.crearPronosticos(args[1], ronda);
 		
-		pronosticos = ImportadorDatos.crearPronosticos(args[1], ronda);
-		
-		
-		System.out.println("TOTAL PUNTOS --> " + calcularPuntos(pronosticos));
+		Ronda.mostrarPuntuacionGeneral(pronosticos);
 		
 	}
 
@@ -28,14 +25,4 @@ public class UsoPronostico {
 		}
 	}
 
-	private static int calcularPuntos(List<Pronostico> pronosticos) {
-		int puntosTotales = 0;
-		int puntosPorPronostico = 0;
-		for(Pronostico pronostico : pronosticos) {
-			puntosPorPronostico = pronostico.puntos();
-			puntosTotales += puntosPorPronostico;
-			System.out.println(puntosPorPronostico + " punto por partido id: " + pronostico.idDelPartido());
-		}
-		return puntosTotales;
-	}
 }

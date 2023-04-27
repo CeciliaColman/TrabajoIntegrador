@@ -41,5 +41,4 @@ public class Equipo {
 		return false;
 	}
 
-	
 }

@@ -60,6 +60,7 @@ public class ImportadorDatos {
 		}
 
 		
+		System.out.println("Leyendo " + pathArchivoOriginal + "...");
 		try {
 			String[] separados;
 			String golesEqA, golesEqB;
@@ -96,6 +97,7 @@ public class ImportadorDatos {
 			e.printStackTrace();
 		}
 		
+		System.out.println("Hecho!");
 		return rutaArchivoResultadosCamposCorrectos;
 	}
 
