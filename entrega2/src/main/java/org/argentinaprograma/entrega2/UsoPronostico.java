@@ -15,7 +15,7 @@ public class UsoPronostico {
 		List<Pronostico> pronosticos = ImportadorDatos.crearPronosticos(args[1], ronda);
 		
 		Ronda.mostrarPuntuacionGeneral(pronosticos);
-		
+
 	}
 
 	private static void chequearCantidadArgumentos(String[] args) {
